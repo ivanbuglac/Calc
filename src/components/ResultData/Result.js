@@ -5,34 +5,33 @@ import configData from '../Data/config.json'
 import './result.scss'
 
 function Result() {
-	const { selectedData } = useContext(DataContext)
+	const { selectedData, resetResults } = useContext(DataContext)
 
-	// Функция для расчета количества листов и их стоимости
 	const calculateMaterialTotal = () => {
 		const material = materialsData.find(
 			item => item.name === selectedData.material
 		)
 		if (!material) return { quantity: 0, total: 0, sheetCount: 0 }
 
-		const area =
-			(parseFloat(selectedData.length) || 0) *
-			(parseFloat(selectedData.width) || 0)
+		const area = (selectedData.length || 0) * (selectedData.width || 0)
 		const sheetWidth = material.width || 1
-		const sheetArea = 1 * sheetWidth // Площадь одного листа
-		const sheetCount = Math.ceil(area / sheetArea) // Количество листов
+		const sheetArea = sheetWidth
+		const sheetCount = Math.ceil(area / sheetArea)
 		const total = sheetCount * (material.price || 0)
 
 		return { quantity: area.toFixed(2), total: total.toFixed(2), sheetCount }
 	}
 
-	// Функция для расчета погонных метров труб
 	const calculatePipeTotal = () => {
 		const pipe = materialsData.find(item => item.name === selectedData.pipe)
 		if (!pipe) return { quantity: 0, total: 0 }
 
-		const stepConfig = configData.find(item => item.type === 'frame')?.step || 1
-		const pipeWidthMeters = (pipe.width || 0) / 1000 // Ширина трубы в метрах
-		const distanceBetweenTubes = stepConfig - pipeWidthMeters // Расстояние между трубами
+		const stepConfig =
+			configData.find(
+				item => item.type === 'frame' && item.key === selectedData.strength
+			)?.step || 1
+		const pipeWidthMeters = (pipe.width || 0) / 1000
+		const distanceBetweenTubes = stepConfig - pipeWidthMeters
 
 		const length = parseFloat(selectedData.length) || 0
 		const width = parseFloat(selectedData.width) || 0
@@ -48,23 +47,34 @@ function Result() {
 		return { quantity: totalPipeLength.toFixed(2), total: total.toFixed(2) }
 	}
 
+	// Функция для расчета количества и стоимости саморезов
 	const calculateFixTotal = () => {
-		const material = materialsData.find(
-			item => item.name === selectedData.material
+		const materialType = selectedData.materialType
+		const fixConfig = configData.find(
+			item => item.type === 'fix' && item.key === materialType
 		)
-		if (!material) return { quantity: 0, total: 0 }
 
-		// Получаем конфигурацию саморезов в зависимости от типа материала
-		const fixConfig = configData.find(item => item.key === material.type) // Здесь мы используем material.type
+		const screwPrice =
+			materialsData.find(
+				item =>
+					item.name ===
+					(materialType === 'metal'
+						? 'Саморез для металла'
+						: 'Саморез для пластика')
+			)?.price || 0
 
-		if (!fixConfig) return { quantity: 0, total: 0 }
+		if (!fixConfig) {
+			console.warn(`Не удалось найти fixConfig для материала: ${materialType}`)
+			return { quantity: 0, total: 0 }
+		}
 
 		const area =
 			(parseFloat(selectedData.length) || 0) *
 			(parseFloat(selectedData.width) || 0)
-		const screwsPerSquareMeter = fixConfig.value || 0 // Количество саморезов на квадратный метр
+		const screwsPerSquareMeter = fixConfig.value || 0
 		const quantity = area * screwsPerSquareMeter
-		const total = quantity * (fixConfig.price || 0) // Убедитесь, что в вашем configData есть цена для саморезов
+
+		const total = quantity * screwPrice
 
 		return { quantity: quantity.toFixed(2), total: total.toFixed(2) }
 	}
@@ -92,19 +102,13 @@ function Result() {
 				</thead>
 				<tbody>
 					<tr>
-						<td>{selectedData.material}</td>
+						<td>{selectedData.material || 'Не выбрано'}</td>
 						<td>м²</td>
 						<td>{materialTotal.quantity}</td>
 						<td>{materialTotal.total} руб.</td>
 					</tr>
 					<tr>
-						<td>Листы ({selectedData.material})</td>
-						<td>шт</td>
-						<td>{materialTotal.sheetCount}</td>
-						<td>{materialTotal.total} руб.</td>
-					</tr>
-					<tr>
-						<td>{selectedData.pipe}</td>
+						<td>{selectedData.pipe || 'Не выбрано'}</td>
 						<td>мп</td>
 						<td>{pipeTotal.quantity}</td>
 						<td>{pipeTotal.total} руб.</td>
@@ -116,13 +120,14 @@ function Result() {
 						<td>{fixTotal.total} руб.</td>
 					</tr>
 				</tbody>
-				<tfoot>
-					<tr>
-						<th colSpan='3'>Итого:</th>
-						<th>{grandTotal} руб.</th>
-					</tr>
-				</tfoot>
 			</table>
+			<div className='result-actions'>
+				<button onClick={resetResults}>Сбросить результаты</button>
+			</div>
+			<div className='total'>
+				<p>Итог:</p>
+				<span>{grandTotal} руб.</span>
+			</div>
 		</div>
 	)
 }

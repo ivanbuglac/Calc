@@ -3,7 +3,7 @@ import React, { createContext, useState } from 'react'
 export const DataContext = createContext()
 
 export const DataProvider = ({ children }) => {
-	const [selectedData, setSelectedData] = useState({
+	const initialData = {
 		material: '',
 		pipe: '',
 		fix: '',
@@ -12,10 +12,19 @@ export const DataProvider = ({ children }) => {
 		strength: '',
 		fixValue: 0,
 		frameType: '',
-	})
+		materialType: '',
+	}
+
+	const [selectedData, setSelectedData] = useState(initialData)
+
+	const resetResults = () => {
+		setSelectedData(initialData)
+	}
 
 	return (
-		<DataContext.Provider value={{ selectedData, setSelectedData }}>
+		<DataContext.Provider
+			value={{ selectedData, setSelectedData, resetResults }}
+		>
 			{children}
 		</DataContext.Provider>
 	)

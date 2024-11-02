@@ -1,5 +1,4 @@
 .result {
-	padding: 20px;
 	background-color: #f9f9f9;
 	border-radius: 8px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -29,17 +28,28 @@
 		}
 
 		tbody {
-			tr {
-				&:nth-child(even) {
-					background-color: #f1f1f1;
-				}
-			}
-
 			td {
 				padding: 12px;
 				border: 1px solid #ddd;
 				text-align: left;
 			}
 		}
+	}
+	.result-actions button {
+		margin: 20px;
+		background: linear-gradient(#0c1e36, #100637, #0b0426);
+		color: white;
+		border-radius: 25px;
+		height: 44px;
+		font-weight: 700;
+	}
+	.total {
+		position: absolute;
+		right: 150px;
+		top: 340px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 10px;
 	}
 }

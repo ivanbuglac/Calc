@@ -1,4 +1,4 @@
-import React, { useContext } from 'react' // Удален useEffect и useState
+import React, { useContext } from 'react'
 import materialsData from '../Data/data.json'
 import configData from '../Data/config.json'
 import { DataContext } from '../../DataContext'
@@ -9,12 +9,23 @@ function InputData() {
 
 	const handleMaterialChange = (type, value) => {
 		const selectedItem = materialsData.find(item => item.name === value)
+
+		if (!selectedItem) {
+			console.warn('Материал не найден в materialsData:', value)
+			return
+		}
+
+		const fixItem = configData.find(
+			item => item.type === 'fix' && item.key === selectedItem.type
+		)
+
 		setSelectedData(prev => ({
 			...prev,
 			[type]: selectedItem.name,
 			[`${type}Price`]: selectedItem.price,
 			[`${type}Unit`]: selectedItem.unit,
-			...(type === 'fix' && { fixValue: selectedItem.value || 0 }), // Добавляем количество саморезов, если это необходимо
+			materialType: selectedItem.type,
+			fixValue: fixItem ? fixItem.value : 0,
 		}))
 	}
 
@@ -39,8 +50,9 @@ function InputData() {
 								<label key={index}>
 									<input
 										type='radio'
-										name={materialType}
+										name='material'
 										value={item.name}
+										checked={selectedData.material === item.name}
 										onChange={() => handleMaterialChange('material', item.name)}
 									/>
 									{item.name}
@@ -48,7 +60,6 @@ function InputData() {
 							))}
 					</div>
 				))}
-
 				<div>
 					<h3>Трубы</h3>
 					{materialsData.filter(item => item.type === 'pipe').length > 0 ? (
