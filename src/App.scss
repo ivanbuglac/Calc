@@ -1,0 +1,35 @@
+@font-face {
+	font-family: 'Montserrat';
+	src: url('./assets/fonts/montserrat-v23-latin_cyrillic-700.woff2')
+			format('woff2'),
+		url('./assets/fonts/montserrat-v23-latin_cyrillic-700.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+}
+
+$background: #050a11;
+$text: #dedfdf;
+
+body {
+	background-color: $background;
+	padding: 0;
+	margin: 0;
+	font-family: 'Montserrat';
+}
+
+.content {
+	margin-top: 10px;
+	display: grid;
+	grid-template-columns: 850px 510px;
+	gap: 20px;
+}
+
+::-webkit-scrollbar {
+	width: 13px;
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgb(26, 99, 163);
+	border-radius: 10px;
+}

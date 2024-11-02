@@ -1,0 +1,45 @@
+.result {
+	padding: 20px;
+	background-color: #f9f9f9;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	max-width: 600px;
+
+	h2 {
+		font-size: 24px;
+		color: #333;
+		text-align: center;
+		margin-bottom: 20px;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 16px;
+
+		thead {
+			background: linear-gradient(#0c1e36, #100637, #0b0426);
+			color: #fff;
+
+			th {
+				padding: 12px;
+				text-align: left;
+				font-weight: 600;
+			}
+		}
+
+		tbody {
+			tr {
+				&:nth-child(even) {
+					background-color: #f1f1f1;
+				}
+			}
+
+			td {
+				padding: 12px;
+				border: 1px solid #ddd;
+				text-align: left;
+			}
+		}
+	}
+}

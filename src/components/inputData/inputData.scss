@@ -1,0 +1,55 @@
+.material {
+	box-shadow: 1px 1px 5px 2px rgba(81, 77, 77, 0.3);
+
+	margin-left: 150px;
+	background: linear-gradient(#0c1e36, #100637, #0b0426);
+	border-radius: 5px;
+	color: white;
+	height: 100%;
+
+	.material__select {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	input[type='text'] {
+		width: 100%;
+		padding: 10px;
+		margin-bottom: 15px;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		font-size: 16px;
+		transition: border-color 0.3s;
+
+		&:focus {
+			border-color: #007bff;
+			outline: none;
+		}
+	}
+
+	h3 {
+		margin: 20px 10px;
+		color: #ffffff;
+	}
+	h2 {
+		text-align: center;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 10px;
+		font-size: 12px;
+		cursor: pointer;
+		margin-left: 10px;
+	}
+
+	input {
+		margin-left: 10px;
+	}
+
+	input[type='radio'] {
+		margin-right: 10px;
+
+		cursor: pointer;
+	}
+}
