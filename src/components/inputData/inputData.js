@@ -18,7 +18,7 @@ function InputData() {
 		console.log('Выбранный элемент:', selectedItem) // Для отладки
 
 		const fixItem = configData.find(
-			item => item.type === 'fix' && item.key === selectedItem.type
+			item => item.type === 'fix' && item.key === selectedItem.material // Проверяем по материалу, а не по типу
 		)
 
 		setSelectedData(prev => {
@@ -28,7 +28,7 @@ function InputData() {
 				[type]: selectedItem.name,
 				[`${type}Price`]: selectedItem.price,
 				[`${type}Unit`]: selectedItem.unit,
-				materialType: selectedItem.type, // Здесь должно устанавливаться значение типа материала
+				materialType: selectedItem.material, // Используем материал как тип
 				fixValue: fixItem ? fixItem.value : 0,
 			}
 		})

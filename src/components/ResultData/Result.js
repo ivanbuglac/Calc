@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { DataContext } from '../../DataContext'
 import materialsData from '../Data/data.json'
 import configData from '../Data/config.json'
@@ -7,16 +7,58 @@ import './result.scss'
 function Result() {
 	const { selectedData, resetResults } = useContext(DataContext)
 
+	// Состояние для саморезов
+	const [fixTotal, setFixTotal] = useState({ quantity: 0, total: 0 })
+
+	// Расчет саморезов с использованием useCallback
+	const calculateFixTotal = useCallback(() => {
+		const { length, width, materialType } = selectedData
+
+		// Если нет нужных данных, возвращаем нулевые значения
+		if (!materialType || !length || !width) {
+			return { quantity: 0, total: 0 }
+		}
+
+		// Найти конфигурацию саморезов
+		const fixConfig = configData.find(
+			item => item.type === 'fix' && item.key === materialType
+		)
+		if (!fixConfig) {
+			console.warn(
+				`Не удалось найти конфигурацию для материала: ${materialType}`
+			)
+			return { quantity: 0, total: 0 }
+		}
+
+		const screwPrice =
+			materialsData.find(item => item.name === 'Саморез')?.price || 0
+		const area = parseFloat(length) * parseFloat(width)
+		const screwsPerSquareMeter = fixConfig.value
+		const quantity = area * screwsPerSquareMeter
+		const total = quantity * screwPrice
+
+		return { quantity: quantity.toFixed(2), total: total.toFixed(2) }
+	}, [selectedData])
+
+	useEffect(() => {
+		setFixTotal(calculateFixTotal())
+	}, [
+		selectedData.length,
+		selectedData.width,
+		selectedData.materialType,
+		calculateFixTotal,
+	])
+
 	const calculateMaterialTotal = () => {
 		const material = materialsData.find(
 			item => item.name === selectedData.material
 		)
 		if (!material) return { quantity: 0, total: 0, sheetCount: 0 }
 
-		const area = (selectedData.length || 0) * (selectedData.width || 0)
+		const area =
+			parseFloat(selectedData.length) * parseFloat(selectedData.width)
 		const sheetWidth = material.width || 1
-		const sheetArea = sheetWidth
-		const sheetCount = Math.ceil(area / sheetArea)
+		const sheetCount = Math.ceil(area / sheetWidth)
 		const total = sheetCount * (material.price || 0)
 
 		return { quantity: area.toFixed(2), total: total.toFixed(2), sheetCount }
@@ -45,37 +87,9 @@ function Result() {
 		return { quantity: totalPipeLength.toFixed(2), total: total.toFixed(2) }
 	}
 
-	const calculateFixTotal = () => {
-		const materialType = selectedData.materialType
-		console.log('materialType:', materialType)
-		const fixConfig = configData.find(
-			item => item.type === 'fix' && item.key === materialType
-		)
-
-		const screwPrice =
-			materialsData.find(item => item.name === 'Саморез')?.price || 0
-
-		if (!fixConfig) {
-			console.warn(
-				`Не удалось найти конфигурацию для материала: ${materialType}`
-			)
-			return { quantity: 0, total: 0 }
-		}
-
-		const area =
-			(parseFloat(selectedData.length) || 0) *
-			(parseFloat(selectedData.width) || 0)
-		const screwsPerSquareMeter = fixConfig.value
-		const quantity = area * screwsPerSquareMeter
-
-		const total = quantity * screwPrice
-
-		return { quantity: quantity.toFixed(2), total: total.toFixed(2) }
-	}
-
 	const materialTotal = calculateMaterialTotal()
 	const pipeTotal = calculatePipeTotal()
-	const fixTotal = calculateFixTotal()
+
 	const grandTotal = (
 		parseFloat(materialTotal.total) +
 		parseFloat(pipeTotal.total) +
