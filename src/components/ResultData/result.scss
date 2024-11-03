@@ -42,10 +42,12 @@
 		border-radius: 25px;
 		height: 44px;
 		font-weight: 700;
+		cursor: pointer;
 	}
 	.total {
+		width: 100px;
 		position: relative;
-		right: 20px;
+		left: 270px;
 		margin-top: -60px;
 		display: flex;
 		align-items: center;

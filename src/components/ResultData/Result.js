@@ -42,12 +42,6 @@ function Result() {
 				)
 				metalTotal.quantity = area
 				metalTotal.total = sheetCount * (material.price || DEFAULT_PRICE)
-
-				console.log('Промежуточные результаты для материала:', {
-					area,
-					sheetCount,
-					total: metalTotal.total,
-				})
 			}
 		}
 
@@ -66,19 +60,12 @@ function Result() {
 				const pipesAlongWidth = Math.ceil(width / distanceBetweenPipes)
 
 				const totalPipeLength =
-					(pipesAlongLength + pipesAlongWidth) * distanceBetweenPipes
+					(pipesAlongLength / distanceBetweenPipes) *
+					(pipesAlongWidth / distanceBetweenPipes)
 
 				pipeTotal.quantity = totalPipeLength
 				pipeTotal.total = totalPipeLength * (pipe.price || DEFAULT_PRICE)
 
-				console.log('Промежуточные результаты для трубы:', {
-					pipesAlongLength,
-					pipesAlongWidth,
-					totalPipeLength,
-					total: pipeTotal.total,
-				})
-
-				// Расчет размера ячейки
 				if (pipesAlongWidth > 0) {
 					cellSize.width = width / pipesAlongWidth
 				}
@@ -102,12 +89,6 @@ function Result() {
 					DEFAULT_PRICE
 				fixTotal.quantity = quantity
 				fixTotal.total = quantity * screwPrice
-
-				console.log('Промежуточные результаты для саморезов:', {
-					area,
-					quantity,
-					total: fixTotal.total,
-				})
 			}
 		}
 
