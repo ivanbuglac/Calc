@@ -12,50 +12,61 @@ function Result() {
 		let pipeTotal = { quantity: 0, total: 0 }
 		let fixTotal = { quantity: 0, total: 0 }
 
-		// Расчет для выбранного материала
+		const length = parseFloat(selectedData.length) || 0
+		const width = parseFloat(selectedData.width) || 0
+
+		if (length <= 0 || width <= 0) {
+			console.error('Длина и ширина должны быть положительными числами.')
+			return { metalTotal, pipeTotal, fixTotal }
+		}
+
 		if (selectedData.material) {
 			const material = materialsData.find(
 				item => item.name === selectedData.material
 			)
 			if (material) {
-				const area = (selectedData.length || 0) * (selectedData.width || 0)
+				const area = length * width
 				const sheetCount = Math.ceil(area / (material.width || 1))
-				metalTotal.quantity = area.toFixed(2)
-				metalTotal.total = (sheetCount * (material.price || 0)).toFixed(2)
+				metalTotal.quantity = area
+				metalTotal.total = sheetCount * (material.price || 0)
+
+				console.log('Промежуточные результаты для материала:', {
+					area,
+					sheetCount,
+					total: metalTotal.total,
+				})
 			}
 		}
 
-		// Расчет для выбранной трубы
 		if (selectedData.pipe) {
 			const pipe = materialsData.find(item => item.name === selectedData.pipe)
 			if (pipe) {
-				// Получаем шаг, основанный на выбранной прочности
 				const stepConfig =
 					configData.find(
 						item => item.type === 'frame' && item.key === selectedData.strength
 					)?.step || 1
 
-				// Рассчитываем расстояние между трубами
-				const pipeWidthMeters = (pipe.width || 0) / 1000 // Перевод в метры
+				const pipeWidthMeters = (pipe.width || 0) / 1000
 				const distanceBetweenPipes = stepConfig - pipeWidthMeters
 
-				const length = parseFloat(selectedData.length) || 0
-				const width = parseFloat(selectedData.width) || 0
-
-				// Количество труб вдоль длины и ширины
 				const pipesAlongLength = Math.ceil(length / distanceBetweenPipes)
 				const pipesAlongWidth = Math.ceil(width / distanceBetweenPipes)
 
-				// Общая длина труб
 				const totalPipeLength =
-					pipesAlongLength * width + pipesAlongWidth * length
+					(pipesAlongLength + pipesAlongWidth) * distanceBetweenPipes
 
-				pipeTotal.quantity = totalPipeLength.toFixed(2)
-				pipeTotal.total = (totalPipeLength * (pipe.price || 0)).toFixed(2)
+				pipeTotal.quantity = totalPipeLength
+				pipeTotal.total = totalPipeLength * (pipe.price || 0)
+
+				console.log('Промежуточные результаты для трубы:', {
+					pipesAlongLength,
+					pipesAlongWidth,
+					totalPipeLength,
+					total: pipeTotal.total,
+				})
 			}
 		}
 
-		// Расчет для саморезов
 		if (selectedData.material) {
 			const materialType = materialsData.find(
 				item => item.name === selectedData.material
@@ -64,12 +75,18 @@ function Result() {
 				item => item.type === 'fix' && item.key === materialType
 			)
 			if (fixConfig) {
-				const area = (selectedData.length || 0) * (selectedData.width || 0)
-				const quantity = area * fixConfig.value // Общее количество саморезов
+				const area = length * width
+				const quantity = area * fixConfig.value
 				const screwPrice =
 					materialsData.find(item => item.name === 'Саморез')?.price || 0
-				fixTotal.quantity = quantity.toFixed(2)
-				fixTotal.total = (quantity * screwPrice).toFixed(2)
+				fixTotal.quantity = quantity
+				fixTotal.total = quantity * screwPrice
+
+				console.log('Промежуточные результаты для саморезов:', {
+					area,
+					quantity,
+					total: fixTotal.total,
+				})
 			}
 		}
 
@@ -78,11 +95,10 @@ function Result() {
 
 	const { metalTotal, pipeTotal, fixTotal } = calculateTotals()
 
-	const grandTotal = (
+	const grandTotal =
 		parseFloat(metalTotal.total) +
 		parseFloat(pipeTotal.total) +
 		parseFloat(fixTotal.total)
-	).toFixed(2)
 
 	return (
 		<div className='result'>
