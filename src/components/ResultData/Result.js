@@ -17,15 +17,23 @@ function Result() {
 
 		if (length <= 0 || width <= 0) {
 			console.error('Длина и ширина должны быть положительными числами.')
-			return { metalTotal, pipeTotal, fixTotal }
+			return {
+				metalTotal,
+				pipeTotal,
+				fixTotal,
+				cellSize: { length: 0, width: 0 },
+			}
 		}
+
+		const area = length * width
+
+		let cellSize = { length: 0, width: 0 }
 
 		if (selectedData.material) {
 			const material = materialsData.find(
 				item => item.name === selectedData.material
 			)
 			if (material) {
-				const area = length * width
 				const sheetCount = Math.ceil(area / (material.width || 1))
 				metalTotal.quantity = area
 				metalTotal.total = sheetCount * (material.price || 0)
@@ -64,6 +72,14 @@ function Result() {
 					totalPipeLength,
 					total: pipeTotal.total,
 				})
+
+				// Расчет размера ячейки
+				if (pipesAlongWidth > 0) {
+					cellSize.width = width / pipesAlongWidth
+				}
+				if (pipesAlongLength > 0) {
+					cellSize.length = length / pipesAlongLength
+				}
 			}
 		}
 
@@ -75,7 +91,6 @@ function Result() {
 				item => item.type === 'fix' && item.key === materialType
 			)
 			if (fixConfig) {
-				const area = length * width
 				const quantity = area * fixConfig.value
 				const screwPrice =
 					materialsData.find(item => item.name === 'Саморез')?.price || 0
@@ -90,10 +105,10 @@ function Result() {
 			}
 		}
 
-		return { metalTotal, pipeTotal, fixTotal }
+		return { metalTotal, pipeTotal, fixTotal, area, cellSize }
 	}, [selectedData])
 
-	const { metalTotal, pipeTotal, fixTotal } = calculateTotals()
+	const { metalTotal, pipeTotal, fixTotal, area, cellSize } = calculateTotals()
 
 	const grandTotal =
 		parseFloat(metalTotal.total) +
@@ -103,6 +118,11 @@ function Result() {
 	return (
 		<div className='result'>
 			<h2>Результаты:</h2>
+			<p>Площадь изделия: {(area || 0).toFixed(2)} м²</p>
+			<p>
+				Размер ячейки: {(cellSize.length || 0).toFixed(2)} х{' '}
+				{(cellSize.width || 0).toFixed(2)} м
+			</p>
 			<table>
 				<thead>
 					<tr>
@@ -116,20 +136,20 @@ function Result() {
 					<tr>
 						<td>{selectedData.material || 'Не выбрано'}</td>
 						<td>м²</td>
-						<td>{metalTotal.quantity}</td>
-						<td>{metalTotal.total}</td>
+						<td>{metalTotal.quantity.toFixed(2)}</td>
+						<td>{metalTotal.total.toFixed(2)}</td>
 					</tr>
 					<tr>
 						<td>{selectedData.pipe || 'Не выбрано'}</td>
 						<td>мп</td>
-						<td>{pipeTotal.quantity}</td>
-						<td>{pipeTotal.total}</td>
+						<td>{pipeTotal.quantity.toFixed(2)}</td>
+						<td>{pipeTotal.total.toFixed(2)}</td>
 					</tr>
 					<tr>
 						<td>Саморезы</td>
 						<td>шт</td>
-						<td>{fixTotal.quantity}</td>
-						<td>{fixTotal.total}</td>
+						<td>{fixTotal.quantity.toFixed(2)}</td>
+						<td>{fixTotal.total.toFixed(2)}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -138,7 +158,7 @@ function Result() {
 			</div>
 			<div className='total'>
 				<p>Итог:</p>
-				<span>{grandTotal}</span>
+				<span>{grandTotal.toFixed(2)}</span>
 			</div>
 		</div>
 	)

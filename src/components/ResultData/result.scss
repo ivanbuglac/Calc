@@ -46,14 +46,14 @@
 	.total {
 		position: absolute;
 		right: 20px;
-		top: 300px;
+		top: 380px;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
 		gap: 10px;
 
 		@media (max-width: 768px) {
-			position: static; /* Убираем абсолютное позиционирование на мобильных */
+			position: static;
 			margin-top: -60px;
 		}
 	}
