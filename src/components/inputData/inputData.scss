@@ -1,13 +1,12 @@
 .material {
 	box-shadow: 1px 1px 5px 2px rgba(81, 77, 77, 0.3);
-
-	margin-left: 150px;
+	max-width: 800px;
 	background: linear-gradient(#0c1e36, #100637, #0b0426);
 	border-radius: 5px;
 	color: white;
 	height: 100%;
 
-	.material__select {
+	.material__select_type {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 	}
@@ -51,5 +50,10 @@
 		margin-right: 10px;
 
 		cursor: pointer;
+	}
+
+	.material__select_strength {
+		display: flex;
+		justify-content: space-around;
 	}
 }

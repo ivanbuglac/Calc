@@ -18,10 +18,16 @@ body {
 }
 
 .content {
-	margin-top: 10px;
+	max-width: 1240px;
+	position: relative;
+	top: 10px;
 	display: grid;
-	grid-template-columns: 850px 510px;
-	gap: 20px;
+	grid-template-columns: 810px 410px;
+	gap: 10px;
+	margin: 0 auto;
+	@media (max-width: 768px) {
+		grid-template-columns: 1fr;
+	}
 }
 
 ::-webkit-scrollbar {

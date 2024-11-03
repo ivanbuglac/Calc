@@ -36,42 +36,36 @@ function Result() {
 		const length = parseFloat(selectedData.length) || 0
 		const width = parseFloat(selectedData.width) || 0
 
-		// Количество труб по длине и ширине
 		const pipesAlongLength = Math.ceil(length / distanceBetweenTubes)
 		const pipesAlongWidth = Math.ceil(width / distanceBetweenTubes)
 
-		// Общая длина трубы (в метрах)
 		const totalPipeLength = pipesAlongLength * width + pipesAlongWidth * length
 		const total = totalPipeLength * (pipe.price || 0)
 
 		return { quantity: totalPipeLength.toFixed(2), total: total.toFixed(2) }
 	}
 
-	// Функция для расчета количества и стоимости саморезов
 	const calculateFixTotal = () => {
 		const materialType = selectedData.materialType
+		console.log('materialType:', materialType)
 		const fixConfig = configData.find(
 			item => item.type === 'fix' && item.key === materialType
 		)
 
 		const screwPrice =
-			materialsData.find(
-				item =>
-					item.name ===
-					(materialType === 'metal'
-						? 'Саморез для металла'
-						: 'Саморез для пластика')
-			)?.price || 0
+			materialsData.find(item => item.name === 'Саморез')?.price || 0
 
 		if (!fixConfig) {
-			console.warn(`Не удалось найти fixConfig для материала: ${materialType}`)
+			console.warn(
+				`Не удалось найти конфигурацию для материала: ${materialType}`
+			)
 			return { quantity: 0, total: 0 }
 		}
 
 		const area =
 			(parseFloat(selectedData.length) || 0) *
 			(parseFloat(selectedData.width) || 0)
-		const screwsPerSquareMeter = fixConfig.value || 0
+		const screwsPerSquareMeter = fixConfig.value
 		const quantity = area * screwsPerSquareMeter
 
 		const total = quantity * screwPrice

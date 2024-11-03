@@ -1,0 +1,17 @@
+.footer {
+	width: 100%;
+	position: relative;
+	top: 20px;
+	bottom: 0;
+	color: white;
+	background: #091628;
+	max-width: 1240px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+	@media (max-width: 768px) {
+		padding: 5px; /* Уменьшаем паддинг для мобильных */
+	}
+}

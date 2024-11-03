@@ -15,18 +15,23 @@ function InputData() {
 			return
 		}
 
+		console.log('Выбранный элемент:', selectedItem) // Для отладки
+
 		const fixItem = configData.find(
 			item => item.type === 'fix' && item.key === selectedItem.type
 		)
 
-		setSelectedData(prev => ({
-			...prev,
-			[type]: selectedItem.name,
-			[`${type}Price`]: selectedItem.price,
-			[`${type}Unit`]: selectedItem.unit,
-			materialType: selectedItem.type,
-			fixValue: fixItem ? fixItem.value : 0,
-		}))
+		setSelectedData(prev => {
+			console.log('Предыдущее состояние:', prev) // Для отладки
+			return {
+				...prev,
+				[type]: selectedItem.name,
+				[`${type}Price`]: selectedItem.price,
+				[`${type}Unit`]: selectedItem.unit,
+				materialType: selectedItem.type, // Здесь должно устанавливаться значение типа материала
+				fixValue: fixItem ? fixItem.value : 0,
+			}
+		})
 	}
 
 	const handleRangeChange = (key, value) => {
@@ -40,7 +45,7 @@ function InputData() {
 	return (
 		<div className='material'>
 			<h2>Выберите материал</h2>
-			<div className='material__select'>
+			<div className='material__select_type'>
 				{['plastic', 'metal'].map(materialType => (
 					<div key={materialType}>
 						<h3>{materialType === 'plastic' ? 'Пластик' : 'Металл'}</h3>
@@ -60,26 +65,26 @@ function InputData() {
 							))}
 					</div>
 				))}
-				<div>
-					<h3>Трубы</h3>
-					{materialsData.filter(item => item.type === 'pipe').length > 0 ? (
-						materialsData
-							.filter(item => item.type === 'pipe')
-							.map((item, index) => (
-								<label key={index}>
-									<input
-										type='radio'
-										name='pipe'
-										value={item.name}
-										onChange={() => handleMaterialChange('pipe', item.name)}
-									/>
-									{item.name}
-								</label>
-							))
-					) : (
-						<p>Нет доступных труб.</p>
-					)}
-				</div>
+			</div>
+			<div>
+				<h3>Трубы</h3>
+				{materialsData.filter(item => item.type === 'pipe').length > 0 ? (
+					materialsData
+						.filter(item => item.type === 'pipe')
+						.map((item, index) => (
+							<label key={index}>
+								<input
+									type='radio'
+									name='pipe'
+									value={item.name}
+									onChange={() => handleMaterialChange('pipe', item.name)}
+								/>
+								{item.name}
+							</label>
+						))
+				) : (
+					<p>Нет доступных труб.</p>
+				)}
 			</div>
 
 			<h2>Введите данные:</h2>
@@ -112,7 +117,7 @@ function InputData() {
 				</label>
 			</div>
 			<h3>Выберите прочность:</h3>
-			<div>
+			<div className='material__select_strength'>
 				{configData
 					.filter(item => item.type === 'frame')
 					.map(item => (

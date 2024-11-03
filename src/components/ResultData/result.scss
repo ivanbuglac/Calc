@@ -45,11 +45,16 @@
 	}
 	.total {
 		position: absolute;
-		right: 150px;
-		top: 340px;
+		right: 20px;
+		top: 280px;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
 		gap: 10px;
+
+		@media (max-width: 768px) {
+			position: static; /* Убираем абсолютное позиционирование на мобильных */
+			margin-top: -60px;
+		}
 	}
 }
