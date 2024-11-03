@@ -21,7 +21,6 @@ function Result() {
 		const width = parseFloat(selectedData.width) || 0
 
 		if (length <= 0 || width <= 0) {
-			console.error('Длина и ширина должны быть положительными числами.')
 			return {
 				metalTotal,
 				pipeTotal,
