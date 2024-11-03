@@ -15,20 +15,20 @@ function InputData() {
 			return
 		}
 
-		console.log('Выбранный элемент:', selectedItem)
-
 		const fixItem = configData.find(
 			item => item.type === 'fix' && item.key === selectedItem.material
 		)
 
+		console.log('Выбранный элемент:', selectedItem) // Добавлено для отладки
+
 		setSelectedData(prev => {
-			console.log('Предыдущее состояние:', prev)
+			console.log('Предыдущее состояние:', prev) // Добавлено для отладки
 			return {
 				...prev,
 				[type]: selectedItem.name,
 				[`${type}Price`]: selectedItem.price,
 				[`${type}Unit`]: selectedItem.unit,
-				materialType: selectedItem.material,
+				materialType: selectedItem.material, // Убедитесь, что здесь materialType устанавливается
 				fixValue: fixItem ? fixItem.value : 0,
 			}
 		})
@@ -67,6 +67,35 @@ function InputData() {
 				))}
 			</div>
 			<div>
+				<h2>Введите данные:</h2>
+				<div>
+					<label>
+						{configData.find(item => item.key === 'length')?.name}:{' '}
+						{selectedData.length} м
+						<input
+							type='range'
+							min={configData.find(item => item.key === 'length')?.min || 0}
+							max={configData.find(item => item.key === 'length')?.max || 0}
+							step={configData.find(item => item.key === 'length')?.step || 1}
+							value={selectedData.length}
+							onChange={e => handleRangeChange('length', e.target.value)}
+						/>
+					</label>
+				</div>
+				<div>
+					<label>
+						{configData.find(item => item.key === 'width')?.name}:{' '}
+						{selectedData.width} м
+						<input
+							type='range'
+							min={configData.find(item => item.key === 'width')?.min || 0}
+							max={configData.find(item => item.key === 'width')?.max || 0}
+							step={configData.find(item => item.key === 'width')?.step || 1}
+							value={selectedData.width}
+							onChange={e => handleRangeChange('width', e.target.value)}
+						/>
+					</label>
+				</div>
 				<h3>Трубы</h3>
 				{materialsData.filter(item => item.type === 'pipe').length > 0 ? (
 					materialsData
@@ -87,35 +116,6 @@ function InputData() {
 				)}
 			</div>
 
-			<h2>Введите данные:</h2>
-			<div>
-				<label>
-					{configData.find(item => item.key === 'length')?.name}:{' '}
-					{selectedData.length} м
-					<input
-						type='range'
-						min={configData.find(item => item.key === 'length')?.min || 0}
-						max={configData.find(item => item.key === 'length')?.max || 0}
-						step={configData.find(item => item.key === 'length')?.step || 1}
-						value={selectedData.length}
-						onChange={e => handleRangeChange('length', e.target.value)}
-					/>
-				</label>
-			</div>
-			<div>
-				<label>
-					{configData.find(item => item.key === 'width')?.name}:{' '}
-					{selectedData.width} м
-					<input
-						type='range'
-						min={configData.find(item => item.key === 'width')?.min || 0}
-						max={configData.find(item => item.key === 'width')?.max || 0}
-						step={configData.find(item => item.key === 'width')?.step || 1}
-						value={selectedData.width}
-						onChange={e => handleRangeChange('width', e.target.value)}
-					/>
-				</label>
-			</div>
 			<h3>Выберите прочность:</h3>
 			<div className='material__select_strength'>
 				{configData
