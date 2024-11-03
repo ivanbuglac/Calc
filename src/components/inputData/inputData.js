@@ -15,20 +15,20 @@ function InputData() {
 			return
 		}
 
-		console.log('Выбранный элемент:', selectedItem) // Для отладки
+		console.log('Выбранный элемент:', selectedItem)
 
 		const fixItem = configData.find(
-			item => item.type === 'fix' && item.key === selectedItem.material // Проверяем по материалу, а не по типу
+			item => item.type === 'fix' && item.key === selectedItem.material
 		)
 
 		setSelectedData(prev => {
-			console.log('Предыдущее состояние:', prev) // Для отладки
+			console.log('Предыдущее состояние:', prev)
 			return {
 				...prev,
 				[type]: selectedItem.name,
 				[`${type}Price`]: selectedItem.price,
 				[`${type}Unit`]: selectedItem.unit,
-				materialType: selectedItem.material, // Используем материал как тип
+				materialType: selectedItem.material,
 				fixValue: fixItem ? fixItem.value : 0,
 			}
 		})

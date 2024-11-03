@@ -1,18 +1,16 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react'
 import { DataContext } from '../../DataContext'
-import materialsData from '../Data/data.json' // Импортируйте данные материалов
-import configData from '../Data/config.json' // Импортируйте данные конфигурации
+import materialsData from '../Data/data.json'
+import configData from '../Data/config.json'
 import './result.scss'
 
 function Result() {
 	const { selectedData, resetResults } = useContext(DataContext)
 
-	// States for materials, pipes, and screws
 	const [metalTotal, setMetalTotal] = useState({ quantity: 0, total: 0 })
 	const [pipeTotal, setPipeTotal] = useState({ quantity: 0, total: 0 })
 	const [fixTotal, setFixTotal] = useState({ quantity: 0, total: 0 })
 
-	// Функция для расчета стоимости материала
 	const calculateMaterialTotal = useCallback(() => {
 		if (!selectedData.material) return { quantity: 0, total: 0 }
 
@@ -28,7 +26,6 @@ function Result() {
 		return { quantity: area.toFixed(2), total: total.toFixed(2) }
 	}, [selectedData.material, selectedData.length, selectedData.width])
 
-	// Функция для расчета стоимости труб
 	const calculatePipeTotal = useCallback(() => {
 		if (!selectedData.pipe) return { quantity: 0, total: 0 }
 
@@ -59,7 +56,6 @@ function Result() {
 		selectedData.strength,
 	])
 
-	// Функция для расчета количества и стоимости саморезов
 	const calculateFixTotal = useCallback(() => {
 		const materialType = selectedData.materialType
 		const fixConfig = configData.find(
