@@ -70,7 +70,7 @@ function InputData() {
 				<h2>Введите данные:</h2>
 				<div>
 					<label>
-						{configData.find(item => item.key === 'length')?.name}:{' '}
+						{configData.find(item => item.key === 'length')?.name}:
 						{selectedData.length} м
 						<input
 							type='range'
@@ -84,7 +84,7 @@ function InputData() {
 				</div>
 				<div>
 					<label>
-						{configData.find(item => item.key === 'width')?.name}:{' '}
+						{configData.find(item => item.key === 'width')?.name}:
 						{selectedData.width} м
 						<input
 							type='range'
