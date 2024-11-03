@@ -44,9 +44,9 @@
 		font-weight: 700;
 	}
 	.total {
-		position: absolute;
+		position: relative;
 		right: 20px;
-		top: 380px;
+		margin-top: -60px;
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;

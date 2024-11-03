@@ -4,6 +4,11 @@ import materialsData from '../Data/data.json'
 import configData from '../Data/config.json'
 import './result.scss'
 
+const MM_TO_M_CONVERSION = 1000
+const DEFAULT_MATERIAL_WIDTH = 1
+const DEFAULT_STEP = 1
+const DEFAULT_PRICE = 0
+const SCREW_NAME = 'Саморез'
 function Result() {
 	const { selectedData, resetResults } = useContext(DataContext)
 
@@ -26,7 +31,6 @@ function Result() {
 		}
 
 		const area = length * width
-
 		let cellSize = { length: 0, width: 0 }
 
 		if (selectedData.material) {
@@ -34,9 +38,11 @@ function Result() {
 				item => item.name === selectedData.material
 			)
 			if (material) {
-				const sheetCount = Math.ceil(area / (material.width || 1))
+				const sheetCount = Math.ceil(
+					area / (material.width || DEFAULT_MATERIAL_WIDTH)
+				)
 				metalTotal.quantity = area
-				metalTotal.total = sheetCount * (material.price || 0)
+				metalTotal.total = sheetCount * (material.price || DEFAULT_PRICE)
 
 				console.log('Промежуточные результаты для материала:', {
 					area,
@@ -52,9 +58,9 @@ function Result() {
 				const stepConfig =
 					configData.find(
 						item => item.type === 'frame' && item.key === selectedData.strength
-					)?.step || 1
+					)?.step || DEFAULT_STEP
 
-				const pipeWidthMeters = (pipe.width || 0) / 1000
+				const pipeWidthMeters = (pipe.width || 0) / MM_TO_M_CONVERSION
 				const distanceBetweenPipes = stepConfig - pipeWidthMeters
 
 				const pipesAlongLength = Math.ceil(length / distanceBetweenPipes)
@@ -64,7 +70,7 @@ function Result() {
 					(pipesAlongLength + pipesAlongWidth) * distanceBetweenPipes
 
 				pipeTotal.quantity = totalPipeLength
-				pipeTotal.total = totalPipeLength * (pipe.price || 0)
+				pipeTotal.total = totalPipeLength * (pipe.price || DEFAULT_PRICE)
 
 				console.log('Промежуточные результаты для трубы:', {
 					pipesAlongLength,
@@ -93,7 +99,8 @@ function Result() {
 			if (fixConfig) {
 				const quantity = area * fixConfig.value
 				const screwPrice =
-					materialsData.find(item => item.name === 'Саморез')?.price || 0
+					materialsData.find(item => item.name === SCREW_NAME)?.price ||
+					DEFAULT_PRICE
 				fixTotal.quantity = quantity
 				fixTotal.total = quantity * screwPrice
 

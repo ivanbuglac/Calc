@@ -4,6 +4,10 @@ import configData from '../Data/config.json'
 import { DataContext } from '../../DataContext'
 import './inputData.scss'
 
+const LENGTH_KEY = 'length'
+const WIDTH_KEY = 'width'
+const MATERIAL_TYPES = ['plastic', 'metal']
+
 function InputData() {
 	const { selectedData, setSelectedData } = useContext(DataContext)
 
@@ -19,34 +23,39 @@ function InputData() {
 			item => item.type === 'fix' && item.key === selectedItem.material
 		)
 
-		console.log('Выбранный элемент:', selectedItem) // Добавлено для отладки
-
 		setSelectedData(prev => {
-			console.log('Предыдущее состояние:', prev) // Добавлено для отладки
 			return {
 				...prev,
 				[type]: selectedItem.name,
 				[`${type}Price`]: selectedItem.price,
 				[`${type}Unit`]: selectedItem.unit,
-				materialType: selectedItem.material, // Убедитесь, что здесь materialType устанавливается
+				materialType: selectedItem.material,
 				fixValue: fixItem ? fixItem.value : 0,
 			}
 		})
 	}
 
+	// Обработчик изменения диапазона
 	const handleRangeChange = (key, value) => {
 		setSelectedData(prev => ({ ...prev, [key]: value }))
 	}
 
+	// Обработчик изменения прочности
 	const handleStrengthChange = event => {
 		setSelectedData(prev => ({ ...prev, strength: event.target.value }))
 	}
+
+	// Получаем конфигурацию для длины и ширины
+	const getConfig = key => configData.find(item => item.key === key) || {}
+
+	const lengthConfig = getConfig(LENGTH_KEY)
+	const widthConfig = getConfig(WIDTH_KEY)
 
 	return (
 		<div className='material'>
 			<h2>Выберите материал</h2>
 			<div className='material__select_type'>
-				{['plastic', 'metal'].map(materialType => (
+				{MATERIAL_TYPES.map(materialType => (
 					<div key={materialType}>
 						<h3>{materialType === 'plastic' ? 'Пластик' : 'Металл'}</h3>
 						{materialsData
@@ -70,29 +79,27 @@ function InputData() {
 				<h2>Введите данные:</h2>
 				<div>
 					<label>
-						{configData.find(item => item.key === 'length')?.name}:
-						{selectedData.length} м
+						{lengthConfig.name}: {selectedData.length} м
 						<input
 							type='range'
-							min={configData.find(item => item.key === 'length')?.min || 0}
-							max={configData.find(item => item.key === 'length')?.max || 0}
-							step={configData.find(item => item.key === 'length')?.step || 1}
+							min={lengthConfig.min || 0}
+							max={lengthConfig.max || 0}
+							step={lengthConfig.step || 1}
 							value={selectedData.length}
-							onChange={e => handleRangeChange('length', e.target.value)}
+							onChange={e => handleRangeChange(LENGTH_KEY, e.target.value)}
 						/>
 					</label>
 				</div>
 				<div>
 					<label>
-						{configData.find(item => item.key === 'width')?.name}:
-						{selectedData.width} м
+						{widthConfig.name}: {selectedData.width} м
 						<input
 							type='range'
-							min={configData.find(item => item.key === 'width')?.min || 0}
-							max={configData.find(item => item.key === 'width')?.max || 0}
-							step={configData.find(item => item.key === 'width')?.step || 1}
+							min={widthConfig.min || 0}
+							max={widthConfig.max || 0}
+							step={widthConfig.step || 1}
 							value={selectedData.width}
-							onChange={e => handleRangeChange('width', e.target.value)}
+							onChange={e => handleRangeChange(WIDTH_KEY, e.target.value)}
 						/>
 					</label>
 				</div>
